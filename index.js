@@ -247,6 +247,13 @@ var handleCloudWatch = function(event, context) {
       color = "good";
   }
 
+  var triggerValue = (trigger.Statistic || "") + " "
+      + (metricName || "") + " "
+      + trigger.ComparisonOperator + " "
+      + trigger.Threshold + " for "
+      + trigger.EvaluationPeriods + " period(s) of "
+      + trigger.Period + " seconds.";
+
   var slackMessage = {
     text: "*" + subject + "*",
     attachments: [
@@ -257,12 +264,7 @@ var handleCloudWatch = function(event, context) {
           { "title": "Alarm Description", "value": alarmDescription, "short": false},
           {
             "title": "Trigger",
-            "value": trigger.Statistic + " "
-              + metricName + " "
-              + trigger.ComparisonOperator + " "
-              + trigger.Threshold + " for "
-              + trigger.EvaluationPeriods + " period(s) of "
-              + trigger.Period + " seconds.",
+            "value": triggerValue.trim(),
               "short": false
           },
           { "title": "Old State", "value": oldState, "short": true },
